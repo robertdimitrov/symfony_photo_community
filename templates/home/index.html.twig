@@ -12,6 +12,18 @@
     <h1>Home page</h1>
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis libero totam veniam cupiditate. Voluptatem ducimus minima nobis similique! Perspiciatis, quod?</p>
     <a href="{{ path('photos') }}">Photos</a><br>
-    <a href="{{ path('admin') }}">Admin</a>
+    <a href="{{ path('admin') }}">Admin</a><br>
+    {% if app.user %}
+		{{ app.user.username }}
+		<a href="{{ path('logout') }}">Logout</a><br>
+    {% else %}
+		<a href="{{ path('login') }}">Login</a><br>
+    {% endif %}
+    {% if is_granted('ROLE_ADMIN') %}
+	    ADMIN
+	{% endif %}
+	{% if is_granted('ROLE_USER') %}
+	    USER
+	{% endif %}
 </div>
 {% endblock %}
