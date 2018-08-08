@@ -24,12 +24,12 @@ class Photo
     /**
      * @ORM\Column(type="string", length=255)
      *
-     * @Assert\File(mimeTypes={ "image/png", "image/jpeg", "image/gif" })
+     * @Assert\File(mimeTypes={ "image/png", "image/jpeg" })
      */
     public $filename;
 
     /**
-     * @Assert\File(mimeTypes={ "image/png", "image/jpeg", "image/gif" })
+     * @Assert\File(mimeTypes={ "image/png", "image/jpeg" })
      * 
      * @var File
      */

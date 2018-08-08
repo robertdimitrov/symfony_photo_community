@@ -16,7 +16,7 @@
 
     {% for  photo in photos %}
 		<p>{{ photo.description }}</p>
-		<img width="200" src="{{ asset('photos/' ~ photo.filename) }}" alt="{{ photo.description }}">
+		<img src="{{ asset('photos/' ~ photo.filename) | imagine_filter('squared_thumbnail') }}" alt="{{ photo.description }}">
     {% endfor %}
 </div>
 {% endblock %}
