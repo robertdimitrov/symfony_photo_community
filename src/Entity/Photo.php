@@ -5,14 +5,12 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PhotoRepository")
- * @Vich\Uploadable
  */
 class Photo
 {
@@ -25,12 +23,13 @@ class Photo
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @Assert\File(mimeTypes={ "image/png", "image/jpeg", "image/gif" })
      */
     public $filename;
 
     /**
-     * @Vich\UploadableField(mapping="photos", fileNameProperty="filename")
-     * @Assert\File(mimeTypes={ "application/pdf" })
+     * @Assert\File(mimeTypes={ "image/png", "image/jpeg", "image/gif" })
      * 
      * @var File
      */
@@ -87,15 +86,6 @@ class Photo
         $this->filename = $filename;
 
         return $this;
-    }
-
-    /**
-     *
-     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $image
-     */
-    public function setImageFile(?File $image = null): void
-    {
-        $this->imageFile = $image;
     }
 
     public function getImageFile(): ?File

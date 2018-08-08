@@ -10,8 +10,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Vich\UploaderBundle\Form\Type\VichImageType;
-
+use App\Form\PhotoType;
 
 class PhotoController extends Controller
 {
@@ -45,18 +44,26 @@ class PhotoController extends Controller
     {
         $photo = new Photo();
         
-        $form = $this->buildUploadForm();
+        $form = $this->createForm(PhotoType::class, $photo);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            // dd($form->getData()['photo']);
-            $photo->setImageFile($form->getData()['photo']);
+            $file = $photo->getImageFile();
+
+            $filename = uniqid('img_', true).'.'.$file->guessExtension();
+
+            $file->move(
+                $this->getParameter('photos_directory'),
+                $filename
+            );
+
             $photo->setCreatedAt(new \DateTime());
-            $photo->setDescription($form->getData()['description']);
             $photo->setStatus('pending');
             $photo->setUserId($this->getUser());
+            $photo->setFilename($filename);
+
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($photo);
@@ -70,14 +77,5 @@ class PhotoController extends Controller
         return $this->render('photo/upload.html.twig', array(
             'form' => $form->createView()
         ));
-    }
-
-    private function buildUploadForm()
-    {
-        return $this->createFormBuilder()
-            ->add('photo', VichImageType::class)
-            ->add('description', TextType::class)
-            ->add('send', SubmitType::class)
-            ->getForm();
     }
 }

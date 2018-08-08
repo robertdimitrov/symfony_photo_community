@@ -25,6 +25,7 @@ class PhotoRepository extends ServiceEntityRepository
             ->andWhere("p.status = 'pending'")
             ->setFirstResult($offset)
             ->setMaxResults($limit)
+            ->orderBy('p.created_at', 'DESC')
             ->getQuery()
             ->getResult()
         ;
