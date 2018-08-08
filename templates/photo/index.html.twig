@@ -16,7 +16,7 @@
 
     {% for  photo in photos %}
 		<p>{{ photo.description }}</p>
-		<img width="200" src="{{ vich_uploader_asset(photo, 'imageFile') }}" alt="{{ photo.description }}">
+		<img width="200" src="{{ asset('photos/' ~ photo.filename) }}" alt="{{ photo.description }}">
     {% endfor %}
 </div>
 {% endblock %}
