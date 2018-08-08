@@ -18,6 +18,7 @@
 		<a href="{{ path('logout') }}">Logout</a><br>
     {% else %}
 		<a href="{{ path('login') }}">Login</a><br>
+        <a href="{{ path('user_registration') }}">Register</a><br>
     {% endif %}
     {% if is_granted('ROLE_ADMIN') %}
 	    ADMIN
