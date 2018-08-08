@@ -19,6 +19,17 @@ class PhotoRepository extends ServiceEntityRepository
         parent::__construct($registry, Photo::class);
     }
 
+    public function approvedPhotos($offset = 0, $limit = 10)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere("p.status = 'pending'")
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 //    /**
 //     * @return Photo[] Returns an array of Photo objects
 //     */

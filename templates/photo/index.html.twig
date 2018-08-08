@@ -13,5 +13,10 @@
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero voluptatum, debitis beatae, deserunt aut iste repellat porro labore ut fugiat.</p>
     <a href="{{ path('home') }}">Home</a><br>
     <a href="{{ path('show_photo', { 'photo': 'abc'}) }}">Photo</a>
+
+    {% for  photo in photos %}
+		<p>{{ photo.description }}</p>
+		<img width="200" src="{{ vich_uploader_asset(photo, 'imageFile') }}" alt="{{ photo.description }}">
+    {% endfor %}
 </div>
 {% endblock %}

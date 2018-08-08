@@ -24,7 +24,8 @@
 	    ADMIN
 	{% endif %}
 	{% if is_granted('ROLE_USER') %}
-	    USER
+	    USER<br>
+        <a href="{{ path('upload_photo') }}">Upload photo</a>
 	{% endif %}
 </div>
 {% endblock %}
