@@ -48,15 +48,15 @@ class PhotoRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Photo
+    
+    public function findOneById($id): ?Photo
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('p.id = :val')
+            ->setParameter('val', $id)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
+    
 }

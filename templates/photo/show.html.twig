@@ -10,8 +10,23 @@
 
 <div class="example-wrapper">
     <h1>Photo</h1>
-    <p>Showing photo with id: {{ photo }}</p>
+    <a href="{{ path('home') }}">Home</a>
+    <p>Showing photo with id: {{ photo.id }}</p>
+    <p>{{ photo.description }}</p>
+    <p>Uploaded by: {{ photo.userId.username }}</p>
+    <img width="400" src="{{ asset('photos/' ~ photo.filename) }}" alt="{{ photo.description }}"><br>
      <a href="{{ path('home') }}">Home</a><br>
     <a href="{{ path('photos') }}">Photos</a>
+    <div class="comments">
+        <h2>Comments</h2>
+    	{% for comment in photo.comments %}
+            <p>{{ comment.userId.username}} said: {{ comment.text }}</p>
+        {% endfor %}
+
+        {{ form_start(form, {'action': path('submit_comment', {'photo': photo.id}), 'method': 'POST'}) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+
+    </div>
 </div>
 {% endblock %}

@@ -3,6 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Photo;
+use App\Entity\Comment;
+use App\Entity\PhotoLike;
+use App\Form\PhotoType;
+use App\Form\CommentType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -10,7 +14,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use App\Form\PhotoType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class PhotoController extends Controller
 {
@@ -32,8 +36,16 @@ class PhotoController extends Controller
     */
     public function show($photo)
     {
+        $photoRepository = $this->getDoctrine()->getRepository(Photo::class);
+        $photo = $photoRepository->findOneById($photo);
+
+        $comment = new Comment();
+
+        $form = $this->createForm(CommentType::class, $comment);
+
     	return $this->render('photo/show.html.twig', [
-    		'photo' => $photo
+    		'photo' => $photo,
+            'form' => $form->createView()
     	]);
     }
 
@@ -64,7 +76,6 @@ class PhotoController extends Controller
             $photo->setUserId($this->getUser());
             $photo->setFilename($filename);
 
-
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($photo);
             $entityManager->flush();
@@ -77,5 +88,103 @@ class PhotoController extends Controller
         return $this->render('photo/upload.html.twig', array(
             'form' => $form->createView()
         ));
+    }
+
+    /**
+    * @Route("/photos/{photo}/comments", name="submit_comment", methods={"POST"})
+    */
+    public function submitComment($photo, Request $request)
+    {
+        $comment = new Comment();
+
+        $form = $this->createForm(CommentType::class, $comment);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $photoRepository = $this->getDoctrine()->getRepository(Photo::class);
+            $photo = $photoRepository->findOneById($photo);
+
+            $comment->setUserId($this->getUser());
+            $comment->setPhotoId($photo);
+            
+            try {
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($comment);
+                $entityManager->flush();
+                $status = 'success';
+            } catch (\Exception $e) {
+                $status = $e->getMessage();
+            }
+        } else {
+            $status = 'failed';
+        }
+
+        return new JsonResponse(array('status' => $status));
+    }
+
+    /**
+    * @Route("/photos/{photo}/likes", name="like_photo", methods={"POST"})
+    */
+    public function likePhoto($photo, Request $request)
+    {
+        $photoRepository = $this->getDoctrine()->getRepository(Photo::class);
+        $photo = $photoRepository->findOneById($photo);
+
+        $likeRepository = $this->getDoctrine()->getRepository(PhotoLike::class);
+        $like = $likeRepository->findByPhotoAndUser($photo, $this->getUser());
+
+        if ($like)
+        {
+           return new JsonResponse(array('status' => 'failed', 'message' => 'already liked')); 
+        }
+
+        $like = new PhotoLike();
+        $like->setPhotoId($photo);
+        $like->setUserId($this->getUser());
+
+        try {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($like);
+            $entityManager->flush();
+            $status = 'success';
+        } catch (\Exception $e) {
+            $status = $e->getMessage();
+        }
+
+        return new JsonResponse(array('status' => $status));
+    }
+
+    /**
+    * @Route("/photos/{photo}/likes/{like}", name="unlike_photo", methods={"DELETE"})
+    */
+    public function unlikePhoto($photo, $like, Request $request)
+    {
+        $likeRepository = $this->getDoctrine()->getRepository(PhotoLike::class);
+        $like = $likeRepository->findById($like);
+
+        if ($like == null)
+        {
+            return new JsonResponse(array('status' => 'failed', 'message' => 'Like object doesn\'t exist.')); 
+        }
+
+        if ($like->getUserId != $this->getUser())
+        {
+            return new JsonResponse(array('status' => 'failed', 'message' => 'You don\'t have the permissions to perform this action.'));
+        }
+
+        $like->remove();
+
+        try {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($like);
+            $entityManager->flush();
+            $status = 'success';
+        } catch (\Exception $e) {
+            $status = $e->getMessage();
+        }
+
+        return new JsonResponse(array('status' => $status));
     }
 }

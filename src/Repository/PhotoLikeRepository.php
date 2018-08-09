@@ -36,15 +36,26 @@ class PhotoLikeRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?PhotoLike
+    public function findById($id): ?PhotoLike
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('p.id = :val')
+            ->setParameter('val', $id)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
+    
+    public function findByPhotoAndUser($photo, $user): ?PhotoLike
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.photo_id = :photo')
+            ->setParameter('photo', $photo)
+            ->andWhere('p.user_id = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+    
 }
