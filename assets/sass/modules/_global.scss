@@ -1,0 +1,106 @@
+body {
+	background-color: $body-bg;
+	position: relative;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+main {
+	flex: 1 0 auto;
+}
+
+main > section:not(.center-container) {
+	padding: 32px 20%;
+	background-color: $body-bg;
+}
+
+footer {
+	flex-shrink: 0;
+}
+
+a, a:hover, a:focus, a:visited {
+	text-decoration: none;
+	color: $highlight-color;
+}
+
+a:hover {
+	color: darken($highlight-color,4%);
+}
+
+.animated-link, a.animated-link {
+	color: $text-color;
+	position: relative;
+	display: inline-block;
+}
+
+.animated-link:active {
+	color: $highlight-color;
+}
+
+.animated-link:hover {
+	cursor: pointer;
+}
+
+.animated-link:after {    
+  content: "";
+  background: none repeat scroll 0 0 transparent;
+  bottom: 0;
+  display: block;
+  height: 2px;
+  left: 50%;
+  position: absolute;
+  background: $highlight-color;
+  transition: width 0.3s ease 0s, left 0.3s ease 0s;
+  width: 0;
+}
+
+.animated-link:hover:after { 
+  width: 100%; 
+  left: 0; 
+}
+
+.smaller-text {
+	font-size: $smaller-text;
+}
+
+a.deemphasized-link, a.deemphasized-link:hover, a.deemphasized-link:active {
+	color: $text-color-light;
+	font-size: 0.9rem;
+}
+
+.full-width {
+	width: 100%;
+}
+
+.hidden {
+	display: none !important;
+}
+
+.important-info {
+	border-left: 4px solid $highlight-color;
+	margin: 16px 0;
+	padding: 0 16px;
+}
+
+.flag {
+	width: 1rem;
+	transform: scale(1.4);
+	transform-origin: center;
+	padding: 4px 4px 0;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@media screen and (max-width: $breakpoint-tablet) {
+	main {
+		width: 100%;
+	}
+
+	main > section:not(.center-container){
+	 	padding: 24px 8%;
+	}
+}

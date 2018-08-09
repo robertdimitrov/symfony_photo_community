@@ -23,7 +23,15 @@
             <p>{{ comment.userId.username}} said: {{ comment.text }}</p>
         {% endfor %}
 
-        {{ form_start(form, {'action': path('submit_comment', {'photo': photo.id}), 'method': 'POST'}) }}
+        {{ form_start(form, {
+                'action': path('submit_comment', {'photo': photo.id}), 
+                'method': 'POST', 
+                'attr': {
+                    'class': 'comment-form', 
+                    'data-photo-id': photo.id
+                }
+            }) 
+        }}
         {{ form_widget(form) }}
         {{ form_end(form) }}
 

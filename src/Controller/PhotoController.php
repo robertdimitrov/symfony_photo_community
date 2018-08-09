@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Psr\Log\LoggerInterface;
 
 class PhotoController extends Controller
 {
@@ -25,6 +26,26 @@ class PhotoController extends Controller
     {
         $photoRepository = $this->getDoctrine()->getRepository(Photo::class);
         $approvedPhotos = $photoRepository->approvedPhotos();
+
+        $user = $this->getUser();
+
+        foreach ($approvedPhotos as $photo)
+        {
+            $photo->isLiked = false;
+            $photo->likeId = null;
+
+            $likes = $photo->getPhotoLikes()->toArray();
+
+            foreach($likes as $like)
+            {
+                if ($like->getUserId() == $user)
+                {
+                    $photo->isLiked = true;
+                    $photo->likeId = $like->getId();
+                    break;
+                }
+            }
+        }
 
         return $this->render('photo/index.html.twig', [
             'photos' => $approvedPhotos
@@ -93,9 +114,12 @@ class PhotoController extends Controller
     /**
     * @Route("/photos/{photo}/comments", name="submit_comment", methods={"POST"})
     */
-    public function submitComment($photo, Request $request)
+    public function submitComment($photo, Request $request, LoggerInterface $logger)
     {
         $comment = new Comment();
+
+        $logger->info('Loggin request');
+        $logger->info($request);
 
         $form = $this->createForm(CommentType::class, $comment);
 
@@ -148,12 +172,10 @@ class PhotoController extends Controller
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($like);
             $entityManager->flush();
-            $status = 'success';
+            return new JsonResponse(array('status' => 'success', 'likeId' => $like->getId()));
         } catch (\Exception $e) {
-            $status = $e->getMessage();
+            return new JsonResponse(array('status' => $e->getMessage()));
         }
-
-        return new JsonResponse(array('status' => $status));
     }
 
     /**
@@ -162,23 +184,23 @@ class PhotoController extends Controller
     public function unlikePhoto($photo, $like, Request $request)
     {
         $likeRepository = $this->getDoctrine()->getRepository(PhotoLike::class);
-        $like = $likeRepository->findById($like);
+        $photoLike = $likeRepository->findById($like);
 
-        if ($like == null)
+        // return new JsonResponse(array('status' => 'abc'));
+
+        if ($photoLike == null)
         {
-            return new JsonResponse(array('status' => 'failed', 'message' => 'Like object doesn\'t exist.')); 
+            return new JsonResponse(array('status' => 'failed', 'message' => 'Like object with id ' . $like . ' doesn\'t exist.')); 
         }
 
-        if ($like->getUserId != $this->getUser())
+        if ($photoLike->getUserId() != $this->getUser())
         {
             return new JsonResponse(array('status' => 'failed', 'message' => 'You don\'t have the permissions to perform this action.'));
         }
 
-        $like->remove();
-
         try {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($like);
+            $entityManager->remove($photoLike);
             $entityManager->flush();
             $status = 'success';
         } catch (\Exception $e) {

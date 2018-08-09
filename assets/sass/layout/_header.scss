@@ -1,0 +1,58 @@
+header {
+	background-color: $body-bg;
+	display: flex;
+	justify-content: space-between;
+	padding: 8px 10%;
+
+	.logo-wrapper {
+		display: inline-block;
+		flex: 1;
+		flex-wrap: wrap;
+
+		img {
+			width: 80px;
+		}
+	}
+	
+	.buttons-wrapper {
+		flex: 4;
+		text-align: right;
+		padding-top: 16px;
+
+		ul {
+			margin: 0;
+			padding: 0;
+
+			li {
+				display: inline-block;
+				list-style-type: none;
+				margin-left: 24px;
+			}
+		}
+	
+		
+	}
+	
+}
+
+@media screen and (max-width: $breakpoint-mobile) {
+	header {
+		flex-direction: column;
+
+		.logo-wrapper {
+			margin: auto;
+		}
+
+		.buttons-wrapper {
+			ul {
+				width: 100%;
+				text-align: center;
+
+				li {
+					margin-left: 8px;
+					font-size: 0.9rem;
+				}
+			}
+		}
+	}
+}

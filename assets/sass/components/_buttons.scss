@@ -1,0 +1,84 @@
+@mixin button-background ($background-color) {
+	background-color: $background-color;
+	box-shadow: 0 2px 8px 2px rgba($background-color, 0.3);
+}
+
+@mixin button-background-hover ($background-color) {
+	background-color: darken($background-color, 2%);
+}
+
+.button {
+	@include button-background($highlight-color);
+	color: white;
+	border: none;
+	border-radius: 4px;
+	font-size: 0.9rem;
+	letter-spacing: 0.5px;
+	padding: 12px 40px;
+}
+
+.button-success {
+	@include button-background($success-color);
+}
+
+.button-info {
+	@include button-background($info-color);
+}
+
+.button-error {
+	@include button-background($error-color);
+}
+
+.button:hover {
+	cursor: pointer;
+}
+
+.button-success:hover {
+	@include button-background-hover($success-color);
+}
+
+.button-info:hover {
+	@include button-background($info-color);
+}
+
+.button-error:hover {
+	@include button-background($error-color);
+}
+
+.button:focus {
+	outline: none;
+	border-color: transparent;
+	box-shadow: 0 0 4px 2px rgba($info-color, 0.6);
+}
+
+.button-animated {
+	-webkit-font-smoothing:antialiased;
+	-webkit-backface-visibility:hidden;
+	transition: transform .3s ease-out;
+	font-weight: 600;
+}
+
+.button-animated:hover {
+	transform: translateY(-2px);
+}
+
+.button-link {
+	display: inline;
+	border: 0;
+	background-color: inherit;
+	color: $highlight-color;
+	padding: 4px 0;
+	box-shadow: none;
+	font-weight: 600;
+}
+
+.button-link:hover {
+	cursor: pointer;
+}
+
+button:disabled {
+    background: #dddddd;
+    cursor: not-allowed;
+    color: $text-color;
+    box-shadow: none;
+}

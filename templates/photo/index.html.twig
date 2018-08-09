@@ -16,7 +16,20 @@
 
     {% for  photo in photos %}
 		<p>{{ photo.description }}</p>
-		<a href="{{ path('show_photo', { 'photo': photo.id })}}"><img src="{{ asset('photos/' ~ photo.filename) | imagine_filter('squared_thumbnail') }}" alt="{{ photo.description }}"></a>
+		<a href="{{ path('show_photo', { 'photo': photo.id })}}"><img src="{{ asset('photos/' ~ photo.filename) | imagine_filter('squared_thumbnail') }}" alt="{{ photo.description }}"></a><br>
+
+        <button 
+            class="js-photo-unlike {% if not photo.isLiked %}hidden{% endif %}" 
+            data-photo-id="{{ photo.id }}" 
+            {% if photo.likeId %} data-like-id="{{ photo.likeId }}" {% endif %}>
+            Unlike
+        </button>
+
+        <button 
+            class="js-photo-like {% if photo.isLiked %}hidden{% endif %}" 
+            data-photo-id="{{ photo.id }}">
+            Like
+        </button>
     {% endfor %}
 </div>
 {% endblock %}
