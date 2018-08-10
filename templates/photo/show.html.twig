@@ -19,15 +19,18 @@
     <a href="{{ path('photos') }}">Photos</a>
     <div class="comments">
         <h2>Comments</h2>
-    	{% for comment in photo.comments %}
-            <p>{{ comment.userId.username}} said: {{ comment.text }}</p>
-        {% endfor %}
+
+        <section class="js-comments-list">
+            {% for comment in photo.comments %}
+                <p>{{ comment.userId.username}} said: {{ comment.text }}</p>
+            {% endfor %}
+        </section>
 
         {{ form_start(form, {
                 'action': path('submit_comment', {'photo': photo.id}), 
                 'method': 'POST', 
                 'attr': {
-                    'class': 'comment-form', 
+                    'class': 'js-comment-form', 
                     'data-photo-id': photo.id
                 }
             }) 

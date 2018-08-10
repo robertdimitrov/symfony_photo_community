@@ -15,7 +15,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Psr\Log\LoggerInterface;
 
 class PhotoController extends Controller
 {
@@ -114,12 +113,9 @@ class PhotoController extends Controller
     /**
     * @Route("/photos/{photo}/comments", name="submit_comment", methods={"POST"})
     */
-    public function submitComment($photo, Request $request, LoggerInterface $logger)
+    public function submitComment($photo, Request $request)
     {
         $comment = new Comment();
-
-        $logger->info('Loggin request');
-        $logger->info($request);
 
         $form = $this->createForm(CommentType::class, $comment);
 
@@ -138,6 +134,11 @@ class PhotoController extends Controller
                 $entityManager->persist($comment);
                 $entityManager->flush();
                 $status = 'success';
+                $newComment = array(
+                    'username' => $comment->getUserId()->getUsername(),
+                    'text' => $comment->getText()
+                );
+                return new JsonResponse(array('status' => $status, 'comment' => $newComment));
             } catch (\Exception $e) {
                 $status = $e->getMessage();
             }
