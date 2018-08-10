@@ -32,24 +32,6 @@ class PhotoRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-
-//    /**
-//     * @return Photo[] Returns an array of Photo objects
-//     */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
     
     public function findOneById($id): ?Photo
     {
@@ -60,5 +42,16 @@ class PhotoRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
-    
+
+    public function randomPhoto(): ?Photo
+    {
+        $allPhotos = $this->createQueryBuilder('p')
+            ->andWhere("p.status = 'approved'")
+            ->getQuery()
+            ->getResult();
+
+        shuffle($allPhotos);
+
+        return $allPhotos[0];
+    }
 }

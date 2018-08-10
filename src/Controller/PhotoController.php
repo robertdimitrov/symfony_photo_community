@@ -52,7 +52,7 @@ class PhotoController extends Controller
     }
 
     /**
-    * @Route("/photos/{photo}", name="show_photo", methods={"GET"})
+    * @Route("/photos/{photo}", name="show_photo", methods={"GET"}, requirements={"photo"="\d+"})
     */
     public function show($photo)
     {
@@ -69,6 +69,24 @@ class PhotoController extends Controller
     	]);
     }
 
+    /**
+    * @Route("/photos/random", name="show_random", methods={"GET"})
+    */
+    public function showRandom()
+    {
+        $photoRepository = $this->getDoctrine()->getRepository(Photo::class);
+        $photo = $photoRepository->randomPhoto();
+
+        $comment = new Comment();
+
+        $form = $this->createForm(CommentType::class, $comment);
+
+        return $this->render('photo/show.html.twig', [
+            'photo' => $photo,
+            'form' => $form->createView()
+        ]);
+    }
+ 
     /**
     * @Route("/upload", name="upload_photo", methods={"GET", "POST"})
     */

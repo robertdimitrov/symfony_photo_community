@@ -4,6 +4,8 @@
 /public/photos
 /public/media
 /public/build
+/public/assets
+/public/.DS_Store
 /var/
 /vendor/
 ###< symfony/framework-bundle ###

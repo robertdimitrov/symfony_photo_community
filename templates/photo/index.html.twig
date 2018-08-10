@@ -3,16 +3,10 @@
 {% block title %}Photo Community - Photos{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
+<section>
     <h1>Photos</h1>
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero voluptatum, debitis beatae, deserunt aut iste repellat porro labore ut fugiat.</p>
     <a href="{{ path('home') }}">Home</a><br>
-    <a href="{{ path('show_photo', { 'photo': 'abc'}) }}">Photo</a>
 
     {% for  photo in photos %}
 		<p>{{ photo.description }}</p>
@@ -31,5 +25,5 @@
             Like
         </button>
     {% endfor %}
-</div>
+</section>
 {% endblock %}

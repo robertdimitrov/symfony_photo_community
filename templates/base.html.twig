@@ -8,16 +8,20 @@
         <link rel="stylesheet" href="{{ asset('build/app.css') }}">
     </head>
     <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-        {% for label, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="flash-{{ label }}">
-                    {{ message }}
-                </div>
+        {% include 'layout/header.html.twig' %}
+        <main>
+            {% block body %}{% endblock %}
+            {% block javascripts %}{% endblock %}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash-{{ label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
+        </main>
         <script src="{{ asset('build/app.js') }}"></script>
         <iframe id="hiddenFrame" name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
+        {% include 'layout/footer.html.twig' %}
     </body>
 </html>
