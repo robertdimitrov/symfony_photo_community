@@ -13,9 +13,17 @@ class HomeController extends Controller
      */
     public function index()
     {
-    	
+        $user = $this->getUser();
+        $roles = '';
+
+        if ($user != null)
+        {
+            $roles = implode($user->getRoles());
+        }
+
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
+            'roles' => $roles
         ]);
     }
 }

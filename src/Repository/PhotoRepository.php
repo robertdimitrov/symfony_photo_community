@@ -19,11 +19,13 @@ class PhotoRepository extends ServiceEntityRepository
         parent::__construct($registry, Photo::class);
     }
 
-    public function approvedPhotos($offset = 0, $limit = 10)
+    public function findByStatus($status, $page = 1, $limit = 12)
     {
+        $page = $page > 0 ? $page : 1;
+
         return $this->createQueryBuilder('p')
-            ->andWhere("p.status = 'pending'")
-            ->setFirstResult($offset)
+            ->andWhere("p.status = '" . $status . "'")
+            ->setFirstResult(($page - 1) * $limit)
             ->setMaxResults($limit)
             ->orderBy('p.created_at', 'DESC')
             ->getQuery()

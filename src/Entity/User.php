@@ -61,6 +61,11 @@ class User implements UserInterface, \Serializable
      */
     private $photoLikes;
 
+    /**
+     * @ORM\Column(type="json_array")
+     */
+    private $roles;
+
     public function __construct()
     {
         $this->photos = new ArrayCollection();
@@ -121,7 +126,18 @@ class User implements UserInterface, \Serializable
 
     public function getRoles()
     {
-        return array('ROLE_USER');
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles)
+    {
+        $this->roles = $roles;
+
+        // allows for chaining
+        return $this;
     }
 
     public function getSalt()

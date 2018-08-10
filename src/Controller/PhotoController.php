@@ -24,7 +24,7 @@ class PhotoController extends Controller
     public function index()
     {
         $photoRepository = $this->getDoctrine()->getRepository(Photo::class);
-        $approvedPhotos = $photoRepository->approvedPhotos();
+        $approvedPhotos = $photoRepository->findByStatus('approved');
 
         $user = $this->getUser();
 

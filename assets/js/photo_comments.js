@@ -37,4 +37,6 @@ let clearCommentForm = () => {
 	commentForm.reset()
 }
 
-ajaxCommentSubmit(commentForm)
+if (commentForm) {
+	ajaxCommentSubmit(commentForm)
+}
